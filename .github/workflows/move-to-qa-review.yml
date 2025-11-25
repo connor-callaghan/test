@@ -1,30 +1,39 @@
-name: Move linked issues to QA Review
+name: Move linked issues to QA Review (Projects v2)
 
 on:
   pull_request:
     types: [closed]
 
+permissions:
+  contents: read
+  pull-requests: read
+  issues: write
+
 jobs:
-  move-linked-issues:
-    # Only run when the PR is actually merged, and into master
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+  move-to-qa-review:
+    # Only run when the PR is actually merged AND into master
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'master'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Move all issues linked to this PR to 'QA Review' column
-        uses: fojia/action-move-issues-to-column@v1.0.2
+      - name: Move PR and related issues to QA Review
+        uses: leonsteinhaeuser/project-beta-automations@v2.2.1
         with:
-          # Name of your project board as it appears in GitHub
-          project: 'test'          # <-- change to your project name
-          # Exact column name that should receive the issues
-          column: 'In review'                   # <-- make sure this matches the column title
-          # Owner of the repo / project (org or user)
-          owner: 'connor-callaghan'         # <-- e.g. 'cronometer'
-          # Repository that the project is attached to (for repo-level projects)
-          repo: 'test'                # <-- e.g. 'cronometer-ios'
-          # Project type: 'repo' (most likely for you), or 'org' / 'user'
-          type: 'repo'
-          # Token for API calls; GITHUB_TOKEN usually works fine
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Base branch to check for merges
-          branch: main
+          # ⬇️ PAT with `repo` + `project` scopes (classic PAT)
+          gh_token: ${{ secrets.PROJECTS_AUTOMATION_PAT }}
+
+          # ⬇️ Choose ONE of these, depending on who owns the Project:
+          user: connor-callaghan
+          # organization: your-org-name          # e.g. "cronometer"
+
+          # ⬇️ Project *ID* (not the project number in the URL)
+          project_id: 1104204387                   # replace with your real project id
+
+          # Node id of the PR that triggered this workflow
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+
+          # The value of your Status field that corresponds to the "QA Review" column
+          status_value: "In review"
+
+          # Also move any related issues to the same status
+          move_related_issues: true
