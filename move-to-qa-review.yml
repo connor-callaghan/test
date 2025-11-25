@@ -1,0 +1,30 @@
+name: Move linked issues to QA Review
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  move-linked-issues:
+    # Only run when the PR is actually merged, and into master
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Move all issues linked to this PR to 'QA Review' column
+        uses: fojia/action-move-issues-to-column@v1.0.2
+        with:
+          # Name of your project board as it appears in GitHub
+          project: 'test'          # <-- change to your project name
+          # Exact column name that should receive the issues
+          column: 'In review'                   # <-- make sure this matches the column title
+          # Owner of the repo / project (org or user)
+          owner: 'connor-callaghan'         # <-- e.g. 'cronometer'
+          # Repository that the project is attached to (for repo-level projects)
+          repo: 'test'                # <-- e.g. 'cronometer-ios'
+          # Project type: 'repo' (most likely for you), or 'org' / 'user'
+          type: 'repo'
+          # Token for API calls; GITHUB_TOKEN usually works fine
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Base branch to check for merges
+          branch: main
