@@ -27,7 +27,7 @@ jobs:
           # organization: your-org-name          # e.g. "cronometer"
 
           # ⬇️ Project *ID* (not the project number in the URL)
-          project_id: 1104204387                   # replace with your real project id
+          project_id: 2                # replace with your real project id
 
           # Node id of the PR that triggered this workflow
           resource_node_id: ${{ github.event.pull_request.node_id }}
