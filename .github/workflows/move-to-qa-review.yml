@@ -22,6 +22,6 @@ jobs:
           gh_token: ${{ secrets.PROJECTS_AUTOMATION_PAT }}
           user: connor-callaghan
           project_id: 2                
-          resource_node_id: ${{ github.event.pull_request.node_id }}
+          resource_node_id: ${{ github.event.issue.node_id }}
           status_value: "In review"
           move_related_issues: true
