@@ -19,21 +19,9 @@ jobs:
       - name: Move PR and related issues to QA Review
         uses: leonsteinhaeuser/project-beta-automations@v2.2.1
         with:
-          # ⬇️ PAT with `repo` + `project` scopes (classic PAT)
           gh_token: ${{ secrets.PROJECTS_AUTOMATION_PAT }}
-
-          # ⬇️ Choose ONE of these, depending on who owns the Project:
           user: connor-callaghan
-          # organization: your-org-name          # e.g. "cronometer"
-
-          # ⬇️ Project *ID* (not the project number in the URL)
-          project_id: 2                # replace with your real project id
-
-          # Node id of the PR that triggered this workflow
+          project_id: 2                
           resource_node_id: ${{ github.event.pull_request.node_id }}
-
-          # The value of your Status field that corresponds to the "QA Review" column
           status_value: "In review"
-
-          # Also move any related issues to the same status
           move_related_issues: true
